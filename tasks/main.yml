@@ -17,5 +17,12 @@
   rpm_key:
     key: "{{ epel_repo_gpg_key_url }}"
     state: present
+  register: rpm_key_result
   when: not epel_repofile_result.stat.exists
+  ignore_errors: yes
+
+- name: Import EPEL GPG key using rpm command
+  command: rpm --import "{{ epel_repo_gpg_key_url }}"
+  register: rpm_result
+  when: not rpm_key_result|success
   ignore_errors: yes
